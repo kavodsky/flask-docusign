@@ -2,6 +2,7 @@ import logging
 from datetime import timedelta, datetime
 from typing import List
 
+import pytz as pytz
 from docusign_esign import EnvelopeDefinition, Text, Tabs, TemplateRole, \
     ApiClient, EnvelopesApi, RecipientViewRequest
 from flask import session
@@ -103,7 +104,7 @@ def ds_token_ok(buffer_min=10):
     if ok:
         token_expiration = session.get("ds_expiration")
         buffer_starts = token_expiration - timedelta(minutes=buffer_min)
-        ok = ok and buffer_starts > datetime.utcnow()
+        ok = ok and buffer_starts > pytz.utc.localize(datetime.utcnow())
     return ok
 
 
